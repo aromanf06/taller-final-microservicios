@@ -4,8 +4,8 @@ package com.bank.bankservice.service;
 import com.bank.bankservice.model.Bank;
 import com.bank.bankservice.repository.IBankRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class BankService {
@@ -15,7 +15,11 @@ public class BankService {
         this.bankRepository=bankRepository;
     }
 
-    public List<Bank> getAll(){
+    public Flux<Bank> getAll(){
         return bankRepository.findAll();
+    }
+
+    public Mono<Bank> getById(Long bankId){
+        return bankRepository.findById(bankId).switchIfEmpty(Mono.error(new RuntimeException("Banco no encontrado")));
     }
 }
